@@ -15,6 +15,24 @@
 # Necessary Check
 # Force build fail on modpost warning
 KBUILD_MODPOST_FAIL_ON_WARNINGS := y
+
+# for fmradio options
+         MTK_PLATFORM_ID := $(patsubst CONSYS_%,%,$(subst ",,$(CONFIG_MTK_COMBO_CHIP)))
+         ifneq (,$(filter $(CONFIG_MTK_COMBO_CHIP), "CONSYS_6885" "CONSYS_6893"))
+             export CFG_BUILD_CONNAC2=true
+         else
+             export CFG_BUILD_CONNAC2=false
+         endif
+         FM_6631_CHIPS := 6758 6759 6771 6775 6765 6761 3967 6797 6768 6785 8168
+         FM_6635_CHIPS := 6779 6885 6873 6893
+         ifneq ($(filter $(FM_6631_CHIPS), $(MTK_PLATFORM_ID)),)
+             FM_CHIP := mt6631
+         else ifneq ($(filter $(FM_6635_CHIPS), $(MTK_PLATFORM_ID)),)
+             FM_CHIP := mt6635
+         endif
+         export CFG_FM_CHIP_ID=$(MTK_PLATFORM_ID)
+         export CFG_FM_CHIP=$(FM_CHIP)
+
 ###############################################################################
 
 MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
